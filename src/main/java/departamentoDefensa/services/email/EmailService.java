@@ -35,7 +35,7 @@ public class EmailService {
                             border-radius: 12px; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.25);">
 
                     <div style="background: #0d1b2a; padding: 25px; text-align: center;">
-                        <img src="https://i.ibb.co/b599sC6f/logo.png" style="width: 1000px; margin-bottom: 50px;">
+                        <img src="https://i.ibb.co/b599sC6f/logo.png" style="width: 300px; margin-bottom: 50px;">
                         <h2 style="color: #ffffff; margin: 0; font-weight: 600; font-size: 22px;">
                             Departamento de Defensa Nacional
                         </h2>
