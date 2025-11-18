@@ -66,7 +66,7 @@ public class AuthController {
 
 
 
-    @GetMapping(value = "/{identification}")
+    @GetMapping(value = "/user/{identification}")
     public ResponseEntity<?> getByID(@PathVariable String identification) {
         try {
             return ResponseEntity.ok(personalFuerzaPublicaService.findById(identification));
