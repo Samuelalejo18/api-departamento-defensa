@@ -1,5 +1,6 @@
 package departamentoDefensa.controller;
 
+import departamentoDefensa.Auth.GetByIdentificationRequest;
 import departamentoDefensa.Auth.LoginRequest;
 import departamentoDefensa.Auth.RegisterRequest;
 import departamentoDefensa.excepciones.*;
@@ -24,7 +25,7 @@ public class AuthController {
     //endPoint login
 
     @PostMapping(value = "/login")
-    public ResponseEntity<?> loginAdmin(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             return ResponseEntity.ok(personalFuerzaPublicaService.login(request));
         }  catch (InvalidCredentialsException e) {
@@ -41,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<?> registerAdmin(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
             return ResponseEntity.ok(personalFuerzaPublicaService.register(request));
 
@@ -62,6 +63,10 @@ public class AuthController {
                     .body("Error al registrar al personal. " + e.getMessage());
         }
     }
+
+
+
+
 
 /*
     //endPoint login

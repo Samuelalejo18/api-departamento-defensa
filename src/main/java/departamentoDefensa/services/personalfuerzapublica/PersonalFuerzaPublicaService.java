@@ -126,6 +126,7 @@ public class PersonalFuerzaPublicaService implements BaseServicePersonalFuerzaPu
 
         // Enviar correo con la contraseña
         emailService.sendPasswordEmail(newUser.getEmail(), passwordGenerated);
+        System.out.printf(passwordGenerated);
 
         try {
             create(newUser);
@@ -201,10 +202,10 @@ public class PersonalFuerzaPublicaService implements BaseServicePersonalFuerzaPu
 
     //GET-SELECT
     @Override
-    public PersonalFuerzaPublica findById(long id) throws Exception {
+    public PersonalFuerzaPublica findById(String identificacion) throws Exception {
         try {
 
-            PersonalFuerzaPublica personal = personalRepository.findById(id).orElse(null);
+            PersonalFuerzaPublica personal = personalRepository.findByIdentificacion(identificacion).orElse(null);
             //System.out.println(personalFuerzaPublica.getId_administrador()+" "+ administrador.getPassword());
             return personal ;
         } catch (Exception e) {

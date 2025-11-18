@@ -12,7 +12,7 @@ import java.util.List;
 public interface BaseServicePersonalFuerzaPublica{
    //GET-SELECT-READ
     public List<PersonalFuerzaPublica> findAll() throws Exception;
-    public PersonalFuerzaPublica findById(long id) throws Exception;
+    public PersonalFuerzaPublica findById(String identificacion) throws Exception;
 
     //CREATE
     public PersonalFuerzaPublica create(PersonalFuerzaPublica personalfuerzapublica) throws Exception;
