@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 //Dar permiso a los clientes
 @CrossOrigin(origins = "*")
-@RequestMapping(path = "")
+@RequestMapping(path = "/user")
 @RequiredArgsConstructor
 public class PersonalFuerzaPublicaController {
 
@@ -23,21 +23,6 @@ public class PersonalFuerzaPublicaController {
     private final PersonalFuerzaPublicaService personalFuerzaPublicaService;
 
 
-    @GetMapping(value = "/getByIdentification")
-    public ResponseEntity<?> getByID(@RequestBody GetByIdentificationRequest request) {
-        try {
-            return ResponseEntity.ok(personalFuerzaPublicaService.findById(request.getIdentificacion()));
 
-        } catch (IdentificationNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-
-        }  catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Violación de integridad de datos.");
-
-        } catch (Exception e) { // ← SIEMPRE EL ÚLTIMO
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al traer el personal de la fuerza publica " + e.getMessage());
-        }
-    }
 
 }

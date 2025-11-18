@@ -66,6 +66,23 @@ public class AuthController {
 
 
 
+    @GetMapping(value = "/{identification}")
+    public ResponseEntity<?> getByID(@PathVariable String identification) {
+        try {
+            return ResponseEntity.ok(personalFuerzaPublicaService.findById(identification));
+
+        } catch (IdentificationNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+
+        }  catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Violación de integridad de datos.");
+
+        } catch (Exception e) { // ← SIEMPRE EL ÚLTIMO
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al traer el personal de la fuerza publica " + e.getMessage());
+        }
+    }
+
 
 
 /*

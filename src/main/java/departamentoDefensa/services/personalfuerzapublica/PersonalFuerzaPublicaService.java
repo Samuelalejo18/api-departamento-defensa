@@ -204,15 +204,26 @@ public class PersonalFuerzaPublicaService implements BaseServicePersonalFuerzaPu
     @Override
     public PersonalFuerzaPublica findById(String identificacion) throws Exception {
         try {
+            PersonalFuerzaPublica personal = personalRepository
+                    .findByIdentificacion(identificacion)
+                    .orElse(null);
 
-            PersonalFuerzaPublica personal = personalRepository.findByIdentificacion(identificacion).orElse(null);
-            //System.out.println(personalFuerzaPublica.getId_administrador()+" "+ administrador.getPassword());
-            return personal ;
+            if (personal == null) {
+                throw new IdentificationNotFoundException(
+                        "No se encontró personal con identificación: " + identificacion
+                );
+            }
+
+            return personal;
+
+        } catch (IdentificationNotFoundException e) {
+            // Se relanza tal cual
+            throw e;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
-
     }
+
 
     //UPDATE
     @Override

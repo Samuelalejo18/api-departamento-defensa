@@ -70,6 +70,7 @@ public class PersonalFuerzaPublica implements UserDetails, Serializable {
 
     @Column(name = "password_hash", nullable = false)
     @NotBlank
+    @JsonIgnore
     @Size(min = 60, max = 100) // longitud típica de BCrypt
     private String passwordHash;
 
@@ -87,7 +88,7 @@ public class PersonalFuerzaPublica implements UserDetails, Serializable {
     public String getPassword() {
         return passwordHash;
     }
-
+    @JsonIgnore
     @Override
     public String getUsername() {
         return this.identificacion;
