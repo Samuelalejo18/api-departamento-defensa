@@ -6,6 +6,7 @@ import com.sendgrid.helpers.mail.objects.Attachments;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,9 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class EmailService {
 
-    // API KEY guardada en Railway
-    private final String sendGridApiKey = "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";
+    @Value("${SENDGRID_API_KEY}")
+    private String sendGridApiKey;
+
 
     public void sendPasswordEmail(String to, String generatedPassword) {
         try {
