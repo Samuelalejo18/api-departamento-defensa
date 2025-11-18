@@ -27,7 +27,7 @@ public class EmailService {
             String logoBase64 = Base64.getEncoder().encodeToString(logoBytes);
 
             // ---------------------------
-            //  HTML EXACTO COMO EL TUYO
+            //  HTML COMPLETO DEL EMAIL
             // ---------------------------
             String html = """
             <div style="font-family: Arial, sans-serif; background: #0d1b2a; padding: 20px;">
@@ -35,7 +35,7 @@ public class EmailService {
                             border-radius: 12px; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.25);">
 
                     <div style="background: #0d1b2a; padding: 25px; text-align: center;">
-                        <img src="cid:logoDefensa" style="width: 120px; margin-bottom: 10px;">
+                        <img src="https://i.ibb.co/b599sC6f/logo.png" style="width: 1000px; margin-bottom: 50px;">
                         <h2 style="color: #ffffff; margin: 0; font-weight: 600; font-size: 22px;">
                             Departamento de Defensa Nacional
                         </h2>
@@ -97,16 +97,7 @@ public class EmailService {
                                     .put("Email", to)
                                     .put("Name", to)))
                     .put("Subject", "Registro Exitoso - Departamento de Defensa")
-                    .put("HTMLPart", html)
-                    .put("InlineAttachments", new JSONArray()
-                            .put(new JSONObject()
-                                    .put("ContentType", "image/png")
-                                    .put("Filename", "logo.png")
-                                    .put("ContentID", "logoDefensa")
-                                    .put("Base64Content", logoBase64)
-                            )
-                    );
-
+                    .put("HTMLPart", html);
             JSONObject body = new JSONObject()
                     .put("Messages", new JSONArray().put(message));
 
@@ -119,12 +110,14 @@ public class EmailService {
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json");
 
+            // Autenticación Basic Auth
             String auth = apiKey + ":" + secretKey;
             String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
             con.setRequestProperty("Authorization", "Basic " + encodedAuth);
 
             con.setDoOutput(true);
 
+            // Enviar cuerpo JSON
             try (OutputStream os = con.getOutputStream()) {
                 os.write(body.toString().getBytes());
             }

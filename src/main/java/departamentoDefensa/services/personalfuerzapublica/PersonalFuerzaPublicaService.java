@@ -118,7 +118,7 @@ public class PersonalFuerzaPublicaService implements BaseServicePersonalFuerzaPu
         }
         newUser.setRango(RangoPolicia.valueOf(request.getRango().toUpperCase()));
 
-        newUser.setIdFuerza(request.getIdentificacion());
+        newUser.setIdFuerza(request.getIdFuerza());
         newUser.setEmail(request.getEmail());
         newUser.setActivo(true);
         String passwordGenerated= generateRandomPassword();
