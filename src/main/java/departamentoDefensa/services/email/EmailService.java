@@ -1,35 +1,41 @@
 package departamentoDefensa.services.email;
 
-import jakarta.mail.internet.MimeMessage;
+import com.sendgrid.*;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Attachments;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
 
-    private final JavaMailSender mailSender;
+    // API KEY guardada en Railway
+    private final String sendGridApiKey = "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";
 
     public void sendPasswordEmail(String to, String generatedPassword) {
         try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-            helper.setFrom("colombiafuerzapublica@gmail.com");
-            helper.setTo(to);
-            helper.setSubject("Registro Exitoso - Departamento de Defensa");
+            // ---- Cargar logo como Base64 para SendGrid ----
+            ClassPathResource logo = new ClassPathResource("logo.png");
+            byte[] logoBytes = logo.getInputStream().readAllBytes();
+            String logoBase64 = Base64.getEncoder().encodeToString(logoBytes);
 
+            // ---- Construir HTML (igual que el tuyo) ----
             String html = """
     <div style="font-family: Arial, sans-serif; background: #0d1b2a; padding: 20px;">
         <div style="max-width: 600px; margin: 0 auto; background: #ffffff;
                     border-radius: 12px; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.25);">
 
-            <!-- ENCABEZADO -->
             <div style="background: #0d1b2a; padding: 25px; text-align: center;">
-                <img src="cid:logoDefensa" style="width: 120px; margin-bottom: 10px;">
+                <img src="cid:logoDefensa">
                 <h2 style="color: #ffffff; margin: 0; font-weight: 600; font-size: 22px;">
                     Departamento de Defensa Nacional
                 </h2>
@@ -38,7 +44,6 @@ public class EmailService {
                 </p>
             </div>
 
-            <!-- CONTENIDO -->
             <div style="padding: 30px; background: #f8fafc;">
                 <p style="font-size: 16px; color: #1a1a1a;">
                     Estimado usuario,
@@ -52,7 +57,6 @@ public class EmailService {
                     Esta es su contraseña temporal:
                 </p>
 
-                <!-- BLOQUE DE CONTRASEÑA ESTILO BOTÓN AZUL -->
                 <div style="
                     background: #1d4ed8;
                     color: white;
@@ -72,7 +76,6 @@ public class EmailService {
                     Por motivos de seguridad, por favor cambie esta contraseña después de iniciar sesión.
                 </p>
 
-                <!-- PIE DE PÁGINA -->
                 <p style="font-size: 14px; color: #555; margin-top: 30px; text-align: center;">
                     Saludos,<br>
                     <strong>Departamento de Defensa Nacional</strong>
@@ -82,18 +85,31 @@ public class EmailService {
     </div>
     """;
 
+            // ---- Construir correo SendGrid ----
+            Email from = new Email("colombiafuerzapublica@gmail.com");
+            Email toEmail = new Email(to);
+            Content content = new Content("text/html", html);
+            Mail mail = new Mail(from, "Registro Exitoso - Departamento de Defensa", toEmail, content);
 
+            // ---- Adjuntar el logo como inline ----
+            Attachments attachment = new Attachments();
+            attachment.setContent(logoBase64);
+            attachment.setType("image/png");
+            attachment.setFilename("logo.png");
+            attachment.setDisposition("inline");
+            attachment.setContentId("logoDefensa");
 
+            mail.addAttachments(attachment);
 
-            helper.setText(html, true);
+            // ---- Enviar ----
+            SendGrid sg = new SendGrid(sendGridApiKey);
+            Request request = new Request();
 
-            // ✔ Cargar imagen correctamente desde resources
-            ClassPathResource logo = new ClassPathResource("logo.png");
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
 
-            // ✔ Asociar el logo al CID
-            helper.addInline("logoDefensa", logo);
-
-            mailSender.send(mimeMessage);
+            sg.api(request);
 
         } catch (Exception e) {
             throw new RuntimeException("Error enviando correo: " + e.getMessage());
